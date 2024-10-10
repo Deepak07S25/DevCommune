@@ -1,0 +1,19 @@
+{
+  "name": "dev-tinder",
+  "version": "1.0.0",
+  "description": "tinder for devs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodejs",
+    "javascript"
+  ],
+  "author": "Deepak Singh",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1",
+    "Express": "^3.0.1"
+  }
+}
