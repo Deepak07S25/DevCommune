@@ -12,31 +12,31 @@ const authRouter = express.Router();
 authRouter.post("/signup", async (req, res) => {
     try {
         // Validation step
-        validateSignUpData(req); // Add 'await' if it's an async function
+        validateSignUpData(req);
   
-        const { firstName, lastName, emailId, password, age, gender } = req.body;
-  
-        // Additional email validation if needed
-     
-  
+        const { firstName, lastName, emailId, password, age, gender, about, skills } = req.body;
+
         // Encrypt the password
         const passwordHash = await bcrypt.hash(password, 10);
-        console.log(passwordHash);
-  
+
         // Creating a new instance of user model
         const user = new User({
             firstName,
             lastName,
             emailId,
-            password:passwordHash,
-        });// we can do this also but we want specifically that {firstName,lastName,emailId,pased,etc}
-        runValidators: true;
+            password: passwordHash,
+            age,
+            gender,
+            about,  // Make sure these fields are included
+            skills, // Make sure these fields are included
+        });
+
         await user.save();
         return res.send("User added successfully");
     } catch (err) {
-        return res.status(400).send("Error  " + err.message);
+        return res.status(400).send("Error: " + err.message);
     }
-  });
+});
 
 
   authRouter.post("/login",async(req,res)=>{
@@ -67,6 +67,10 @@ authRouter.post("/signup", async (req, res) => {
 
 })
 
+authRouter.post("/logout", async (req, res) => {
+    res.cookie("token", null, { expires: new Date(Date.now() - 1000) });
+    res.send("Logout successful");
+});
 
 
 

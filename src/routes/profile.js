@@ -1,32 +1,41 @@
 const express = require("express");
 
 const profileRouter = express.Router();
-const{userAuth} = require("../middlewares/auth.js");
+const { userAuth } = require("../middlewares/auth.js");
+const { validateEditProfileData } = require("../utils/validation.js");
 
-
-profileRouter.get("/profile", userAuth,async(req,res) =>{
-    //using try block
-    try{
-      const user = req.user;
-    //     const cookies = req.cookies;
-    //     const {token} = cookies;
-    //     if(!token){
-    //         throw new Error("Invalid Token");
-    //     }
-    // const decodedMessages = await jwt.verify(token,"DEV@Tinder$790");
-    // const {_id} = decodedMessages;
-  
-    // const user = await User.findById(_id);
-    // if(!user){
-    //     throw new Error("User does Not exists");
-    // }
-    res.send(user);
-  
-    }catch(err){
-        res.status(400).send("Error : ",+ err.message);
+profileRouter.get("/profile/view", userAuth, async (req, res) => {
+    try {
+        const user = req.user;
+        res.send(user);
+    } catch (err) {
+        res.status(400).send(`Error: ${err.message}`);
     }
-  })
+});
 
+profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
+    try {
+        // Check if there are fields to update
+        if (!req.body || !Object.keys(req.body).length) {
+            throw new Error("No fields to update");
+        }
 
+        if (!validateEditProfileData(req)) {
+            throw new Error("Invalid Edit Request");
+        }
 
-  module.exports = profileRouter;
+        const loggedInUser = req.user;
+        Object.keys(req.body).forEach((key) => (loggedInUser[key] = req.body[key]));
+
+        await loggedInUser.save();
+
+        res.json({
+            message: `${loggedInUser.firstName}, your profile updated successfully`,
+            data: loggedInUser,
+        });
+    } catch (err) {
+        res.status(400).send(`Error: ${err.message}`);
+    }
+});
+
+module.exports = profileRouter;

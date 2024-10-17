@@ -1,18 +1,21 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+
 const userSchema = new mongoose.Schema({
-    firstName:{
-        type:String,
+    firstName: {
+        type: String,
+        required: true,
     },
-    lastName:{
-        type:String,
+    lastName: {
+        type: String,
+        required: true,
     },
-    emailId:{
-        type:String,
-        lowercase:true,
-        required:true,
-        unique:true,
-        trim:true,
+    emailId: {
+        type: String,
+        lowercase: true,
+        required: true,
+        unique: true,
+        trim: true,
         validate: {
             validator: function (value) {
                 return validator.isEmail(value);
@@ -20,18 +23,22 @@ const userSchema = new mongoose.Schema({
             message: props => `${props.value} is not a valid email address`
         }
     },
-    age:{
-        type:Number, 
+    age: {
+        type: Number,
     },
-    gender:{
-        type:String,
+    gender: {
+        type: String,
     },
-    password:{
-        type:String,
-        required:true,
+    about: {
+        type: String,
+    },
+    skills: {
+        type: String,
+    },
+    password: {
+        type: String,
+        required: true,
     }
-  
-    
-});
+}, { collection: 'User' }); // Specify your collection name here
 
-module.exports = mongoose.model("User",userSchema);
+module.exports = mongoose.model("User", userSchema);
