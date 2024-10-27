@@ -38,7 +38,16 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
+    },
+    photoUrl: { // Added photo URL field
+        type: String,
+        validate: {
+            validator: function (value) {
+                return validator.isURL(value); // Validate if it's a valid URL
+            },
+            message: props => `${props.value} is not a valid URL`
+        }
     }
-}, { collection: 'User' }); // Specify your collection name here
+});
 
 module.exports = mongoose.model("User", userSchema);

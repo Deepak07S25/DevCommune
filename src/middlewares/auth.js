@@ -8,7 +8,7 @@ const userAuth = async (req, res, next) => {
 
         // If no token is present, respond with an error
         if (!token) {
-            return res.status(401).send("Error: No token provided. Authentication required.");
+            return res.status(401).send("Please Login");
         }
 
         // 2. Validate the token
